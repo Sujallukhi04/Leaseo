@@ -93,6 +93,7 @@ export function VendorRegisterForm() {
             backButtonHref="/auth/signup"
             backButtonLabel="Back to User Signup"
             isDisabled={isPending}
+            showSocial={false}
         >
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

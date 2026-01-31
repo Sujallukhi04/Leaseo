@@ -32,13 +32,24 @@ export const {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.sub = user.id;
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
+        token.phone = user.phone;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
+        if (token.sub) {
+          session.user.id = token.sub;
+        }
+
+        session.user.firstName = token.firstName as string;
+        session.user.lastName = token.lastName as string;
+        session.user.phone = token.phone as string;
+        session.user.role = token.role as "ADMIN" | "VENDOR" | "CUSTOMER";
       }
       return session;
     },

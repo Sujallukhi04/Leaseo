@@ -1,4 +1,4 @@
-export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
+export const DEFAULT_LOGIN_REDIRECT = "/customer/dashboard";
 
 export const publicRoutes = ["/", "/auth/new-verification"];
 
@@ -11,4 +11,4 @@ export const apiRoutes = [
   "/api/data",
 ];
 
-export const privateRoutes = ["/dashboard", "/settings"];
+export const privateRoutes = ["/customer/dashboard", "/settings", "/vendor/dashboard"];

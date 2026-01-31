@@ -40,6 +40,7 @@ enum QuotationStatus {
 
 enum OrderStatus {
   DRAFT
+  PENDING
   CONFIRMED
   IN_PROGRESS
   COMPLETED
@@ -174,12 +175,14 @@ model Token {
 model Address {
   id            String   @id @default(cuid())
   userId        String
+  fullName      String?
   label         String?  // Home, Office, etc.
   addressLine1  String
   addressLine2  String?
   city          String
   state         String
   postalCode    String
+  deliveryInstructions String?
   country       String   @default("India")
   isDefault     Boolean  @default(false)
   createdAt     DateTime @default(now())

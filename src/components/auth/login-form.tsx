@@ -59,7 +59,16 @@ export function LoginForm() {
 
         toast.success("Logged in!", { id: toastId, closeButton: true });
 
-        router.push(callbackUrl || DEFAULT_LOGIN_REDIRECT);
+        if (callbackUrl) {
+          router.push(callbackUrl);
+          return;
+        }
+
+        if (data?.role === "VENDOR") {
+          router.push("/vendor/dashboard");
+        } else {
+          router.push("/customer/dashboard");
+        }
       } catch (err: any) {
         toast.error(`Something went wrong: ${err?.message || ""}`, {
           id: toastId,
@@ -137,7 +146,7 @@ export function LoginForm() {
                   size={"sm"}
                   asChild
                 >
-                  <Link href="#" className="text-start">
+                  <Link href="/auth/reset" className="text-start">
                     Forget password?
                   </Link>
                 </Button>

@@ -5,6 +5,9 @@ type User = {
   email: string;
   image: string | null;
   id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
 };
 
 export function useCurrentUserClient(): {

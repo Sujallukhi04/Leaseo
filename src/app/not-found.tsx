@@ -23,7 +23,7 @@ export default function NotFound() {
           </Link>
 
           <Link
-            href="/dashboard"
+            href="/customer/dashboard"
             className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
             Dashboard

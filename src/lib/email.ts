@@ -39,3 +39,39 @@ export async function sendVerificationEmail(
     throw error;
   }
 }
+
+export async function sendPasswordResetEmail(
+  email: string,
+  token: string
+) {
+  const ResetLink = `${process.env.BASE_URL}/auth/new-password?token=${token}`;
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_FROM,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: email,
+    subject: "Reset your password",
+    html: `<h2>Reset your password</h2>
+        <p>Click the link below to reset your password:</p>
+        <a href="${ResetLink}">Reset Password</a>
+        <p>Or copy/paste: ${ResetLink}</p>
+        <p>This link expires in 1 hour.</p>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error("Error sending Reset email:", error);
+    throw error;
+  }
+}

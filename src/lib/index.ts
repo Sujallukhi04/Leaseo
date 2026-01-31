@@ -66,3 +66,16 @@ export const VendorRegisterSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const ResetSchema = z.object({
+  email: z.string().email({ message: "Email is required" }),
+});
+
+export const NewPasswordSchema = z.object({
+  password: z
+    .string()
+    .min(8, { message: "Minimum 8 characters" })
+    .regex(passwordValidation, {
+      message: "Password too weak",
+    }),
+});

@@ -48,5 +48,5 @@ export const Signin = async (
 
   if (!check) return { error: "Invalid Password" };
 
-  return { success: true };
+  return { success: true, role: (existingUser as any).role };
 };
