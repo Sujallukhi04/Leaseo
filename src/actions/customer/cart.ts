@@ -68,6 +68,11 @@ export const addToCart = async (productId: string, quantity: number, startDate: 
     const userId = session.user.id;
 
     try {
+        // Check Stock
+        const product = await db.product.findUnique({ where: { id: productId } });
+        if (!product) return { error: "Product not found" };
+        if (product.quantity < quantity) return { error: "Not enough stock available" };
+
         let cart = await db.cart.findUnique({
             where: { userId },
         });
@@ -78,16 +83,23 @@ export const addToCart = async (productId: string, quantity: number, startDate: 
             });
         }
 
-        await db.cartItem.create({
-            data: {
-                cartId: cart.id,
-                productId,
-                quantity,
-                rentalStartDate: startDate,
-                rentalEndDate: endDate,
-                periodType: "DAILY",
-            },
-        });
+        // Transactional update: Decrement stock AND Add to Cart
+        await db.$transaction([
+            db.product.update({
+                where: { id: productId },
+                data: { quantity: { decrement: quantity } }
+            }),
+            db.cartItem.create({
+                data: {
+                    cartId: cart.id,
+                    productId,
+                    quantity,
+                    rentalStartDate: startDate,
+                    rentalEndDate: endDate,
+                    periodType: "DAILY",
+                },
+            })
+        ]);
 
         revalidatePath("/customer/cart");
         revalidatePath("/customer/checkout");
@@ -106,11 +118,23 @@ export const removeFromCart = async (cartItemId: string) => {
     }
 
     try {
-        await db.cartItem.delete({
-            where: {
-                id: cartItemId,
-            },
+        const cartItem = await db.cartItem.findUnique({
+            where: { id: cartItemId }
         });
+
+        if (!cartItem) {
+            return { error: "Item not found" };
+        }
+
+        await db.$transaction([
+            db.product.update({
+                where: { id: cartItem.productId },
+                data: { quantity: { increment: cartItem.quantity } }
+            }),
+            db.cartItem.delete({
+                where: { id: cartItemId },
+            })
+        ]);
 
         revalidatePath("/customer/cart");
         revalidatePath("/customer/checkout");

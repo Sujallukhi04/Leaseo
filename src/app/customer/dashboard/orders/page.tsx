@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { Package, Calendar, ChevronRight } from "lucide-react";
+import { DeleteOrderButton } from "@/components/customer/orders/DeleteOrderButton";
 
 export default async function OrdersPage() {
     const session = await auth();
@@ -71,10 +72,11 @@ export default async function OrdersPage() {
                                         <p className="text-sm text-muted-foreground">Order #</p>
                                         <p className="font-medium">{order.orderNumber}</p>
                                     </div>
-                                    <div>
+                                    <div className="flex items-center gap-4">
                                         <Badge variant={order.status === 'COMPLETED' ? 'default' : 'secondary'}>
                                             {order.status}
                                         </Badge>
+                                        <DeleteOrderButton orderId={order.id} />
                                     </div>
                                 </CardHeader>
                                 <CardContent className="p-6">

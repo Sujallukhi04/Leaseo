@@ -58,7 +58,8 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                                         title={product.name}
                                         price={displayPrice}
                                         period={displayPeriod}
-                                        status={product.quantity > 0 ? "In Stock" : "Out of Stock"}
+                                        status={product.quantity > 0 ? `${product.quantity} Available` : "Out of Stock"}
+                                        quantity={product.quantity}
                                         image={primaryImage}
                                         vendorName={vendorName}
                                         category={categoryName}

@@ -26,8 +26,17 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith(route)
   );
 
-  if (isLoggedIn && isAuthRoute)
-    return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+  if (isLoggedIn && isAuthRoute) {
+    if (session?.user?.role === "VENDOR") {
+      return NextResponse.redirect(new URL("/vendor/dashboard", nextUrl));
+    }
+    return NextResponse.redirect(new URL("/customer/dashboard", nextUrl));
+  }
+
+  // Protect Vendor Routes
+  if (isLoggedIn && pathname.startsWith("/vendor") && session?.user?.role !== "VENDOR") {
+    return NextResponse.redirect(new URL("/customer/dashboard", nextUrl));
+  }
 
   if (!isLoggedIn && isPrivateRoute) {
     const callbackUrl = encodeURIComponent(nextUrl.pathname + nextUrl.search);

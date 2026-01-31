@@ -29,12 +29,30 @@ export const updateOrderStatus = async (orderId: string, status: "CONFIRMED" | "
     }
 
     try {
+        if (status === "CANCELLED") {
+            // Restore Stock
+            const orderItems = await db.rentalOrderItem.findMany({
+                where: { orderId: orderId }
+            });
+
+            await Promise.all(orderItems.map(async (item) => {
+                await db.product.update({
+                    where: { id: item.productId },
+                    data: {
+                        quantity: { increment: item.quantity }
+                    }
+                });
+            }));
+        }
+
         await db.rentalOrder.update({
             where: { id: orderId },
             data: { status: status }
         });
 
         revalidatePath("/vendor/dashboard/orders");
+        revalidatePath("/customer/dashboard/products");
+        revalidatePath("/customer/dashboard"); // In case features/trending uses stock
         return { success: `Order ${status.toLowerCase()} successfully` };
     } catch (error) {
         console.error("Error updating order status:", error);
