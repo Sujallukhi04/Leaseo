@@ -11,6 +11,8 @@ export const updateProfile = async (
         email: string; // usually email change requires verification, but we'll allow basic update or just keep it helper
         phone?: string;
         image?: string;
+        companyName?: string;
+        gstin?: string;
     }
 ) => {
     try {
@@ -36,6 +38,8 @@ export const updateProfile = async (
                 lastName: data.lastName,
                 phone: data.phone,
                 image: data.image,
+                companyName: data.companyName,
+                gstin: data.gstin,
             },
         });
 
