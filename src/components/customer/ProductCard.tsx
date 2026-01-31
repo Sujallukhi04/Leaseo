@@ -14,12 +14,13 @@ interface ProductProps {
     title: string;
     price: string;
     period: string;
-    status: "In Stock" | "Out of Stock";
+    status: string; // Generalized
+    quantity?: number;
     vendorName?: string;
     category?: string;
 }
 
-export const ProductCard = ({ id, image, title, price, period, status, vendorName, category }: ProductProps) => {
+export const ProductCard = ({ id, image, title, price, period, status, quantity, vendorName, category }: ProductProps) => {
     return (
         <Link href={`/customer/product/${id}`}>
             <Card className="overflow-hidden group hover:shadow-lg transition-shadow h-full cursor-pointer flex flex-col">
@@ -40,7 +41,16 @@ export const ProductCard = ({ id, image, title, price, period, status, vendorNam
                         </span>
                     )}
 
-                    {status === "Out of Stock" && (
+                    {/* Quantity Badge */}
+                    {quantity !== undefined && quantity > 0 && (
+                        <div className="absolute top-2 right-2 z-10">
+                            <span className="bg-primary/90 text-primary-foreground text-[10px] px-2 py-1 rounded-full font-bold shadow-sm">
+                                {quantity} Left
+                            </span>
+                        </div>
+                    )}
+
+                    {(status === "Out of Stock" || (quantity !== undefined && quantity === 0)) && (
                         <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
                             <span className="text-white font-bold border-2 border-white px-4 py-2 rounded">
                                 Out of Stock

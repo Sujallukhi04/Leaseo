@@ -25,13 +25,34 @@ export const Register = async (values: z.infer<typeof RegisterSchema>) => {
 
   const hashedPassord = await bcrypt.hash(password, 10);
 
+  // Generate a unique coupon code for the new user
+  const randomSuffix = Math.floor(1000 + Math.random() * 9000); // 4 digit random
+  const userCouponCode = `WELCOME-${randomSuffix}10`;
+
   const user = await db.user.create({
     data: {
       firstName,
       lastName,
       email,
       password: hashedPassord,
+      // Store the code assigned to them so we can show it in dashboard
+      couponCode: userCouponCode
     },
+  });
+
+  // Create the actual Coupon record so it works
+  await db.coupon.create({
+    data: {
+      code: userCouponCode,
+      description: "Welcome Discount for New User",
+      discountType: "PERCENTAGE",
+      discountValue: 10,
+      validFrom: new Date(),
+      validUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year validity
+      usageLimit: 1, // One time use
+      isActive: true,
+      allowedUserId: user.id // Strict binding
+    }
   });
 
   const verificationToken = await generateVerificationToken(email);

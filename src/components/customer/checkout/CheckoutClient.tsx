@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition, useState } from "react";
+import { useTransition, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,27 +9,71 @@ import { ChevronRight, Calendar, MapPin, CreditCard, Tag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { CartRemoveButton } from "@/components/customer/CartRemoveButton";
-import { updateCartItemQuantity } from "@/actions/customer/cart"; // Add import
+import { updateCartItemQuantity } from "@/actions/customer/cart";
 import { createOrder } from "@/actions/customer/order";
+import { checkAndGrantWelcomeReward } from "@/actions/customer/rewards";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 interface CheckoutClientProps {
     cart: any;
+    userId?: string;
 }
 
-export const CheckoutClient = ({ cart }: CheckoutClientProps) => {
+export const CheckoutClient = ({ cart, userId }: CheckoutClientProps) => {
     const items = cart?.items || [];
     const subtotal = items.reduce((sum: number, item: any) => sum + (Number(item.product.basePrice) * item.quantity), 0);
-    const tax = subtotal * 0.18;
-    const total = subtotal + tax;
+    const [couponCode, setCouponCode] = useState("");
+    const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; amount: number } | null>(null);
+
+    const taxAmount = subtotal * 0.18;
+    // Calculate total with discount
+    const totalBeforeDiscount = subtotal + taxAmount;
+    const total = totalBeforeDiscount - (appliedDiscount?.amount || 0);
 
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
 
+    useEffect(() => {
+        if (userId) {
+            const checkReward = async () => {
+                const res = await checkAndGrantWelcomeReward();
+                if (res.success && res.couponCode) {
+                    toast.message("🎉 Welcome Gift Granted!", {
+                        description: `Use code ${res.couponCode} for 10% OFF! Check your notifications.`,
+                        duration: 8000,
+                    });
+                }
+            };
+            checkReward();
+        }
+    }, [userId]);
+
+
+    const handleApplyCoupon = async () => {
+        if (!couponCode.trim()) return;
+
+        startTransition(async () => {
+            // Dynamically import to avoid circular dep if any
+            const { validateCoupon } = await import("@/actions/customer/coupon");
+            const res: any = await validateCoupon(couponCode, subtotal);
+
+            if (res.error) {
+                toast.error(res.error);
+                setAppliedDiscount(null);
+            } else if (res.success) {
+                toast.success(res.message);
+                setAppliedDiscount({
+                    code: res.couponCode!,
+                    amount: res.discountAmount!
+                });
+            }
+        });
+    };
+
     const handleCheckout = () => {
         startTransition(async () => {
-            const res = await createOrder();
+            const res = await createOrder(appliedDiscount?.code);
             if (res.error) {
                 toast.error(res.error);
             } else {
@@ -183,6 +227,16 @@ export const CheckoutClient = ({ cart }: CheckoutClientProps) => {
                                         <span>Sub Total</span>
                                         <span>Rs {subtotal.toLocaleString()}</span>
                                     </div>
+                                    <div className="flex justify-between text-muted-foreground">
+                                        <span>Tax (18%)</span>
+                                        <span>Rs {taxAmount.toLocaleString()}</span>
+                                    </div>
+                                    {appliedDiscount && (
+                                        <div className="flex justify-between text-green-600 font-medium">
+                                            <span>Discount ({appliedDiscount.code})</span>
+                                            <span>- Rs {appliedDiscount.amount.toLocaleString()}</span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <Separator />
@@ -195,9 +249,23 @@ export const CheckoutClient = ({ cart }: CheckoutClientProps) => {
                         </Card>
 
                         <div className="space-y-3">
-                            <Button variant="outline" className="w-full justify-between h-12 border-primary/20 hover:bg-primary/5 hover:text-primary">
-                                <span className="flex items-center gap-2"><Tag className="w-4 h-4" /> Apply Coupon</span>
-                            </Button>
+                            <div className="flex gap-2">
+                                <Input
+                                    placeholder="Enter Coupon Code"
+                                    value={couponCode}
+                                    onChange={(e) => setCouponCode(e.target.value)}
+                                    disabled={!!appliedDiscount || isPending}
+                                />
+                                {appliedDiscount ? (
+                                    <Button variant="outline" onClick={() => { setAppliedDiscount(null); setCouponCode(""); }}>
+                                        Remove
+                                    </Button>
+                                ) : (
+                                    <Button onClick={handleApplyCoupon} disabled={!couponCode || isPending} variant="secondary">
+                                        Apply
+                                    </Button>
+                                )}
+                            </div>
 
                             <Button variant="outline" className="w-full justify-between h-12">
                                 <span className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> Pay with Saved Card</span>

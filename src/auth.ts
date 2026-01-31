@@ -30,17 +30,28 @@ export const {
   },
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
+        token.phone = user.phone;
       }
+
+      if (trigger === "update" && session) {
+        token = { ...token, ...session };
+      }
+
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as "ADMIN" | "VENDOR" | "CUSTOMER";
+        session.user.firstName = token.firstName as string | null;
+        session.user.lastName = token.lastName as string | null;
+        session.user.phone = token.phone as string | null;
       }
       return session;
     },

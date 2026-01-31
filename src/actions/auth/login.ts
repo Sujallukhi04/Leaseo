@@ -35,7 +35,7 @@ export const Signin = async (
       await sendVerificationEmail(
         verificationToken.email,
         verificationToken.token,
-        existingUser.name
+        existingUser.firstName || "User"
       );
     } catch (error) {
       console.error("Test email failed:", error);
@@ -48,5 +48,6 @@ export const Signin = async (
 
   if (!check) return { error: "Invalid Password" };
 
+  // Explicitly return role typed correctly or as string
   return { success: true, role: (existingUser as any).role };
 };

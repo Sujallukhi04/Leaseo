@@ -8,6 +8,8 @@ import { useState, useEffect } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getCart } from "@/actions/customer/cart";
+import { NotificationBell } from "../common/NotificationBell";
+import { checkAndGrantWelcomeReward } from "@/actions/customer/rewards";
 
 export const CustomerNavbar = () => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -27,6 +29,9 @@ export const CustomerNavbar = () => {
             }
         };
         fetchCartCount();
+
+        // Trigger Welcome Reward Check automatically on first visit
+        checkAndGrantWelcomeReward().catch(e => console.error(e));
     }, []);
 
     return (
@@ -60,6 +65,8 @@ export const CustomerNavbar = () => {
                     <Button variant="ghost" size="icon" className="relative">
                         <Heart className="h-5 w-5" />
                     </Button>
+
+                    <NotificationBell />
 
                     <Link href="/customer/cart">
                         <Button variant="ghost" size="icon" className="relative">

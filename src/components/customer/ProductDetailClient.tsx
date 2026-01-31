@@ -111,19 +111,26 @@ export const ProductDetailClient = ({ product }: ProductDetailClientProps) => {
                                     size="icon"
                                     className="h-full rounded-none"
                                     onClick={() => setQuantity(quantity + 1)}
+                                    disabled={quantity >= product.quantity}
                                 >
                                     <Plus className="w-4 h-4" />
                                 </Button>
+                            </div>
+                            <div className="text-xs mt-1 text-muted-foreground">
+                                {product.quantity > 0
+                                    ? (product.quantity < 5 ? <span className="text-orange-500 font-medium">Only {product.quantity} left!</span> : `${product.quantity} available`)
+                                    : <span className="text-destructive font-medium">Out of Stock</span>
+                                }
                             </div>
                         </div>
 
                         <Button
                             className="flex-1 h-10 gap-2"
                             onClick={handleAddToCart}
-                            disabled={isPending}
+                            disabled={isPending || product.quantity <= 0}
                         >
                             <ShoppingCart className="w-4 h-4" />
-                            {isPending ? "Adding..." : "Add to cart"}
+                            {isPending ? "Adding..." : (product.quantity > 0 ? "Add to cart" : "Out of Stock")}
                         </Button>
 
                         <Button variant="outline" size="icon" className="h-10 w-10">
