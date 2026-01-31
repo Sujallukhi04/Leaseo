@@ -15,8 +15,9 @@ export function Providers({ children }: ProvidersProps) {
     <SessionProvider>
       <NextThemesProvider
         attribute="class"
-        forcedTheme="dark" // Dark mode only
-        disableTransitionOnChange // Avoid flash on hydration
+        defaultTheme="dark"
+        enableSystem={false}
+        disableTransitionOnChange
       >
         <AuthGate>
           {children}
