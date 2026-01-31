@@ -32,23 +32,14 @@ export const {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.sub = user.id;
-        token.firstName = user.firstName;
-        token.lastName = user.lastName;
-        token.phone = user.phone;
+        token.id = user.id;
         token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        if (token.sub) {
-          session.user.id = token.sub;
-        }
-
-        session.user.firstName = token.firstName as string;
-        session.user.lastName = token.lastName as string;
-        session.user.phone = token.phone as string;
+        session.user.id = token.id as string;
         session.user.role = token.role as "ADMIN" | "VENDOR" | "CUSTOMER";
       }
       return session;
@@ -96,7 +87,7 @@ export const {
     },
   },
   session: { strategy: "jwt" },
-  adapter: PrismaAdapter(db),
+  adapter: PrismaAdapter(db) as any,
   providers: [
     ...authConfig.providers!,
     Credentials({

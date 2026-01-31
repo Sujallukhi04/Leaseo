@@ -1,0 +1,21 @@
+
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+async function main() {
+    const email = 'nisargramani5@gmail.com';
+    console.log('Updating role for:', email);
+    try {
+        const user = await prisma.user.update({
+            where: { email },
+            data: { role: 'VENDOR' }
+        });
+        console.log('SUCCESS: User role updated to VENDOR:', user.id);
+        console.log('User Role in DB:', user.role);
+        console.log('Has Password:', !!user.password);
+    } catch (e) {
+        console.error('FAILED to update user:', e);
+    }
+}
+
+main().finally(() => prisma.$disconnect());

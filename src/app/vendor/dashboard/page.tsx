@@ -49,7 +49,9 @@ export default async function VendorDashboard() {
             </div>
 
             <div className="mt-8">
-                <Button>Add New Product</Button>
+                <Link href="/vendor/products/new">
+                    <Button>Add New Product</Button>
+                </Link>
             </div>
         </div>
     );

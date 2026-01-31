@@ -102,7 +102,7 @@ export default async function VendorOrdersPage() {
                                             <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Customer</p>
                                             <div className="flex items-center gap-2">
                                                 <User className="h-3 w-3 text-muted-foreground" />
-                                                <span className="font-medium">{order.customer.firstName || order.customer.name || "Guest"}</span>
+                                                <span className="font-medium">{order.customer.firstName || "Guest"}</span>
                                             </div>
                                         </div>
                                         <div>
