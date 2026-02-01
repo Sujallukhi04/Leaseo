@@ -1,5 +1,5 @@
 import { ProtectedLayout } from "@/components/ProtectedLayout";
-import { VendorSidebar, VendorHeader } from "@/components/vendor/VendorSidebar";
+import { VendorNavbar } from "@/components/vendor/VendorNavbar";
 
 export default async function VendorLayout({
   children,
@@ -8,12 +8,11 @@ export default async function VendorLayout({
 }) {
   return (
     <ProtectedLayout requiredRole={["VENDOR", "ADMIN"]}>
-      <div className="flex h-screen overflow-hidden bg-muted/30">
-        <VendorSidebar />
-        <div className="flex flex-col flex-1 overflow-hidden">
-          <VendorHeader />
-          <main className="flex-1 overflow-y-auto p-4 lg:p-6">{children}</main>
-        </div>
+      <div className="flex flex-col h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+        <VendorNavbar />
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 scroll-smooth">
+          {children}
+        </main>
       </div>
     </ProtectedLayout>
   );

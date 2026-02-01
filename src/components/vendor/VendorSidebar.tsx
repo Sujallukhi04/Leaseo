@@ -16,6 +16,7 @@ import {
   ChevronRight,
   Store,
   Menu,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -68,6 +69,11 @@ const sidebarLinks = [
     title: "Reports",
     href: "/vendor/reports",
     icon: BarChart3,
+  },
+  {
+    title: "Profile",
+    href: "/vendor/profile",
+    icon: User,
   },
   {
     title: "Settings",
@@ -201,7 +207,7 @@ export function VendorHeader() {
 
   const initials = user
     ? `${user.firstName?.[0] || ""}${user.lastName?.[0] || ""}`.toUpperCase() ||
-      "V"
+    "V"
     : "V";
 
   return (

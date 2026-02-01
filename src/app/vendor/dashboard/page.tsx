@@ -26,10 +26,10 @@ import {
 import { formatDistanceToNow } from "date-fns";
 
 const statusColors: Record<string, string> = {
-  DRAFT: "bg-gray-500",
-  CONFIRMED: "bg-blue-500",
+  DRAFT: "bg-slate-500 dark:bg-slate-700",
+  CONFIRMED: "bg-sky-500",
   IN_PROGRESS: "bg-orange-500",
-  COMPLETED: "bg-green-500",
+  COMPLETED: "bg-emerald-500",
   CANCELLED: "bg-red-500",
 };
 
@@ -73,23 +73,23 @@ export default function VendorDashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-500" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-6">
       {/* Page Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Dashboard</h1>
+          <p className="text-slate-500 dark:text-slate-400">
             Welcome back! Here&apos;s your business overview.
           </p>
         </div>
         <div className="flex gap-2">
-          <Button asChild>
+          <Button asChild className="bg-sky-500 hover:bg-sky-600 text-white">
             <Link href="/vendor/orders/new">
               <ShoppingCart className="mr-2 h-4 w-4" />
               New Order
@@ -100,30 +100,30 @@ export default function VendorDashboardPage() {
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white transition-colors">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-sky-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               ₹{stats?.totalRevenue?.toLocaleString() || 0}
             </div>
-            <p className="text-xs text-muted-foreground">
-              <TrendingUp className="inline h-3 w-3 mr-1 text-green-500" />
+            <p className="text-xs text-slate-500">
+              <TrendingUp className="inline h-3 w-3 mr-1 text-emerald-500" />
               From all completed orders
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white transition-colors">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Orders</CardTitle>
+            <ShoppingCart className="h-4 w-4 text-sky-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats?.totalOrders || 0}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-slate-500">
               <span className="text-orange-500">
                 {stats?.pendingOrders || 0}
               </span>{" "}
@@ -132,31 +132,31 @@ export default function VendorDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white transition-colors">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Products</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Products</CardTitle>
+            <Package className="h-4 w-4 text-sky-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {stats?.totalProducts || 0}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-slate-500">
               Active products in catalog
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white transition-colors">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Customers</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Customers</CardTitle>
+            <Users className="h-4 w-4 text-sky-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {stats?.totalCustomers || 0}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-slate-500">
               Unique customers served
             </p>
           </CardContent>
@@ -165,41 +165,41 @@ export default function VendorDashboardPage() {
 
       {/* Secondary Stats */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white transition-colors">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
               Active Rentals
             </CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <Clock className="h-4 w-4 text-sky-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {stats?.activeRentals || 0}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-slate-500">
               Currently in progress
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white transition-colors">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
               Draft Invoices
             </CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+            <FileText className="h-4 w-4 text-sky-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {stats?.draftInvoices || 0}
             </div>
-            <p className="text-xs text-muted-foreground">Pending to send</p>
+            <p className="text-xs text-slate-500">Pending to send</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white transition-colors">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
               Overdue Invoices
             </CardTitle>
             <AlertCircle className="h-4 w-4 text-red-500" />
@@ -208,16 +208,16 @@ export default function VendorDashboardPage() {
             <div className="text-2xl font-bold text-red-500">
               {stats?.overdueInvoices || 0}
             </div>
-            <p className="text-xs text-muted-foreground">Require attention</p>
+            <p className="text-xs text-slate-500">Require attention</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Recent Orders */}
-      <Card>
+      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white transition-colors">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Recent Orders</CardTitle>
-          <Button variant="ghost" size="sm" asChild>
+          <Button variant="ghost" size="sm" asChild className="text-sky-500 hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800">
             <Link href="/vendor/orders">
               View All
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -226,7 +226,7 @@ export default function VendorDashboardPage() {
         </CardHeader>
         <CardContent>
           {recentOrders.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="text-center py-8 text-slate-500">
               <ShoppingCart className="mx-auto h-12 w-12 mb-4 opacity-20" />
               <p>No orders yet</p>
               <p className="text-sm">
@@ -238,35 +238,35 @@ export default function VendorDashboardPage() {
               {recentOrders.map((order) => (
                 <div
                   key={order.id}
-                  className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                  className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
                 >
                   <div className="flex items-center gap-4">
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">{order.orderNumber}</span>
+                        <span className="font-medium text-slate-900 dark:text-white">{order.orderNumber}</span>
                         <Badge
-                          className={`${statusColors[order.status]} text-white`}
+                          className={`${statusColors[order.status]} text-white border-none`}
                         >
                           {statusLabels[order.status]}
                         </Badge>
                       </div>
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-sm text-slate-500 dark:text-slate-400">
                         {order.customer.firstName} {order.customer.lastName}
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-right">
-                      <p className="font-medium">
+                      <p className="font-medium text-slate-900 dark:text-white">
                         ₹{order.totalAmount.toLocaleString()}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-slate-500">
                         {formatDistanceToNow(new Date(order.createdAt), {
                           addSuffix: true,
                         })}
                       </p>
                     </div>
-                    <Button variant="ghost" size="icon" asChild>
+                    <Button variant="ghost" size="icon" asChild className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
                       <Link href={`/vendor/orders/${order.id}`}>
                         <ArrowUpRight className="h-4 w-4" />
                       </Link>
@@ -281,15 +281,15 @@ export default function VendorDashboardPage() {
 
       {/* Quick Actions */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="hover:border-primary transition-colors cursor-pointer">
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:border-sky-500 transition-colors cursor-pointer group">
           <Link href="/vendor/products/new">
             <CardContent className="flex items-center gap-4 p-6">
-              <div className="rounded-full bg-primary/10 p-3">
-                <Package className="h-6 w-6 text-primary" />
+              <div className="rounded-full bg-sky-500/10 p-3 group-hover:bg-sky-500/20 transition-colors">
+                <Package className="h-6 w-6 text-sky-500" />
               </div>
               <div>
                 <p className="font-medium">Add Product</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   Create a new rental product
                 </p>
               </div>
@@ -297,15 +297,15 @@ export default function VendorDashboardPage() {
           </Link>
         </Card>
 
-        <Card className="hover:border-primary transition-colors cursor-pointer">
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:border-sky-500 transition-colors cursor-pointer group">
           <Link href="/vendor/orders/new">
             <CardContent className="flex items-center gap-4 p-6">
-              <div className="rounded-full bg-blue-500/10 p-3">
+              <div className="rounded-full bg-blue-500/10 p-3 group-hover:bg-blue-500/20 transition-colors">
                 <ShoppingCart className="h-6 w-6 text-blue-500" />
               </div>
               <div>
                 <p className="font-medium">Create Order</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   New rental order
                 </p>
               </div>
@@ -313,15 +313,15 @@ export default function VendorDashboardPage() {
           </Link>
         </Card>
 
-        <Card className="hover:border-primary transition-colors cursor-pointer">
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:border-sky-500 transition-colors cursor-pointer group">
           <Link href="/vendor/invoices">
             <CardContent className="flex items-center gap-4 p-6">
-              <div className="rounded-full bg-green-500/10 p-3">
-                <FileText className="h-6 w-6 text-green-500" />
+              <div className="rounded-full bg-emerald-500/10 p-3 group-hover:bg-emerald-500/20 transition-colors">
+                <FileText className="h-6 w-6 text-emerald-500" />
               </div>
               <div>
                 <p className="font-medium">Manage Invoices</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   View and create invoices
                 </p>
               </div>
@@ -329,15 +329,15 @@ export default function VendorDashboardPage() {
           </Link>
         </Card>
 
-        <Card className="hover:border-primary transition-colors cursor-pointer">
+        <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:border-sky-500 transition-colors cursor-pointer group">
           <Link href="/vendor/customers">
             <CardContent className="flex items-center gap-4 p-6">
-              <div className="rounded-full bg-orange-500/10 p-3">
+              <div className="rounded-full bg-orange-500/10 p-3 group-hover:bg-orange-500/20 transition-colors">
                 <Users className="h-6 w-6 text-orange-500" />
               </div>
               <div>
                 <p className="font-medium">View Customers</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   Customer management
                 </p>
               </div>

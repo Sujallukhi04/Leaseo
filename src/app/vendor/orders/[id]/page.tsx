@@ -452,15 +452,14 @@ export default function OrderDetailPage() {
               </div>
               <div style="text-align: right;">
                 <h3>Delivery Address</h3>
-                ${
-                  order.address
-                    ? `
+                ${order.address
+        ? `
                   <p>${order.address.addressLine1}</p>
                   ${order.address.addressLine2 ? `<p>${order.address.addressLine2}</p>` : ""}
                   <p>${order.address.city}, ${order.address.state} - ${order.address.postalCode}</p>
                 `
-                    : "<p>Self Pickup</p>"
-                }
+        : "<p>Self Pickup</p>"
+      }
               </div>
             </div>
 
@@ -478,8 +477,8 @@ export default function OrderDetailPage() {
               </thead>
               <tbody>
                 ${order.items
-                  .map(
-                    (item, index) => `
+        .map(
+          (item, index) => `
                   <tr>
                     <td>${index + 1}</td>
                     <td>${item.productName}</td>
@@ -490,8 +489,8 @@ export default function OrderDetailPage() {
                     <td style="text-align: right;">₹${item.totalPrice.toLocaleString()}</td>
                   </tr>
                 `,
-                  )
-                  .join("")}
+        )
+        .join("")}
               </tbody>
             </table>
 
@@ -582,9 +581,9 @@ export default function OrderDetailPage() {
   const totalAmount = subtotal + taxAmount;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-[1400px] mx-auto">
       {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between sticky top-0 z-10 bg-white dark:bg-slate-900 pb-4 pt-4 px-2 -mx-2 border-b border-slate-200 dark:border-slate-800 mb-6 shadow-sm">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/vendor/orders">
@@ -593,12 +592,12 @@ export default function OrderDetailPage() {
           </Button>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold">Rental Order</h1>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Rental Order</h1>
               <Badge className={statusColors[order.status]}>
                 {statusLabels[order.status]}
               </Badge>
             </div>
-            <p className="text-muted-foreground">{order.orderNumber}</p>
+            <p className="text-slate-500 dark:text-slate-400">{order.orderNumber}</p>
           </div>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -616,7 +615,7 @@ export default function OrderDetailPage() {
             {sendingEmail ? "Sending..." : "Send"}
           </Button>
           {order.status === "DRAFT" && (
-            <Button size="sm" onClick={() => handleStatusChange("CONFIRMED")}>
+            <Button size="sm" onClick={() => handleStatusChange("CONFIRMED")} className="bg-sky-500 hover:bg-sky-600 text-white">
               <CheckCircle className="mr-2 h-4 w-4" />
               Confirm
             </Button>
@@ -630,7 +629,7 @@ export default function OrderDetailPage() {
             Download
           </Button>
           {(order.status === "CONFIRMED" || order.status === "IN_PROGRESS") && (
-            <Button size="sm" onClick={handleCreateInvoice}>
+            <Button size="sm" onClick={handleCreateInvoice} className="bg-sky-500 hover:bg-sky-600 text-white border-transparent">
               <FileText className="mr-2 h-4 w-4" />
               Create Invoice
             </Button>
@@ -657,22 +656,25 @@ export default function OrderDetailPage() {
       </div>
 
       {/* Status Tabs */}
-      <div className="flex gap-4 border-b pb-4">
+      <div className="flex gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
         <Button
           variant={order.status === "DRAFT" ? "default" : "ghost"}
           size="sm"
+          className={order.status === "DRAFT" ? "bg-sky-500 hover:bg-sky-600 text-white" : ""}
         >
           Quotation
         </Button>
         <Button
           variant={order.status === "CONFIRMED" ? "default" : "ghost"}
           size="sm"
+          className={order.status === "CONFIRMED" ? "bg-sky-500 hover:bg-sky-600 text-white" : ""}
         >
           Quotation Sent
         </Button>
         <Button
           variant={order.status === "IN_PROGRESS" ? "default" : "ghost"}
           size="sm"
+          className={order.status === "IN_PROGRESS" ? "bg-sky-500 hover:bg-sky-600 text-white" : ""}
         >
           Sale Order
         </Button>
@@ -695,14 +697,14 @@ export default function OrderDetailPage() {
                   </span>
                 </div>
                 {order.customer.email && (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Mail className="h-4 w-4" />
+                  <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                    <Mail className="h-4 w-4 text-sky-500" />
                     {order.customer.email}
                   </div>
                 )}
                 {order.customer.phone && (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Phone className="h-4 w-4" />
+                  <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                    <Phone className="h-4 w-4 text-sky-500" />
                     {order.customer.phone}
                   </div>
                 )}
@@ -710,8 +712,8 @@ export default function OrderDetailPage() {
               {order.address && (
                 <div className="space-y-1">
                   <span className="font-medium text-sm">Delivery Address:</span>
-                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4 mt-0.5" />
+                  <div className="flex items-start gap-2 text-sm text-slate-500 dark:text-slate-400">
+                    <MapPin className="h-4 w-4 mt-0.5 text-sky-500" />
                     <div>
                       <p>{order.address.addressLine1}</p>
                       {order.address.addressLine2 && (
@@ -736,24 +738,24 @@ export default function OrderDetailPage() {
             <CardContent>
               <div className="flex items-center gap-8">
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <Calendar className="h-4 w-4 text-sky-500" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Start Date</p>
-                    <p className="font-medium">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Start Date</p>
+                    <p className="font-medium text-slate-900 dark:text-white">
                       {order.items[0]
                         ? format(
-                            new Date(order.items[0].rentalStartDate),
-                            "PPP",
-                          )
+                          new Date(order.items[0].rentalStartDate),
+                          "PPP",
+                        )
                         : "-"}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <Calendar className="h-4 w-4 text-sky-500" />
                   <div>
-                    <p className="text-xs text-muted-foreground">End Date</p>
-                    <p className="font-medium">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">End Date</p>
+                    <p className="font-medium text-slate-900 dark:text-white">
                       {order.items[0]
                         ? format(new Date(order.items[0].rentalEndDate), "PPP")
                         : "-"}

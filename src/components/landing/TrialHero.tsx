@@ -34,7 +34,7 @@ export function TrialHero() {
                     transition={{
                         duration: 0.3,
                         ease: "easeOut",
-                        delay: 2.2 // Wait for intro animation (approx 2.5s total duration)
+                        delay: 0 // Wait for intro animation (approx 2.5s total duration)
                     }}
                     className="flex flex-col gap-2 w-full max-w-[480px]"
                 >
@@ -49,14 +49,14 @@ export function TrialHero() {
                         </p>
                     </div>
                 </motion.div>
-                
+
                 <motion.div
                     initial={{ y: 600, opacity: 1 }}
                     animate={{ y: 50, opacity: 1 }}
                     transition={{
                         duration: 0.5,
                         ease: "easeOut",
-                        delay: 2.2 // Wait for intro animation (approx 2.5s total duration)
+                        delay: 0 // Wait for intro animation (approx 2.5s total duration)
                     }}
                     className="flex flex-col gap-2 w-full max-w-[480px]"
                 >
