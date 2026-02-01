@@ -142,10 +142,24 @@ export default function OrderDetailPage() {
     }
   };
 
-  const generateInvoicePDF = () => {
+  const generateInvoicePDF = async () => {
     if (!order) return null;
 
     const doc = new jsPDF();
+
+    // Fetch and add the font
+    try {
+      const fontUrl = 'https://fonts.gstatic.com/s/dancingscript/v25/If2cXTrKn41E5jMYpzcmlyg7v8zv.ttf';
+      const fontResponse = await fetch(fontUrl);
+      const fontBuffer = await fontResponse.arrayBuffer();
+      const base64Font = Buffer.from(fontBuffer).toString('base64');
+
+      doc.addFileToVFS('DancingScript.ttf', base64Font);
+      doc.addFont('DancingScript.ttf', 'DancingScript', 'normal');
+    } catch (error) {
+      console.error("Failed to load DancingScript font for PDF", error);
+    }
+
     const pageWidth = doc.internal.pageSize.getWidth();
 
     const subtotal = order.items.reduce(
@@ -161,13 +175,19 @@ export default function OrderDetailPage() {
         .join(" ") || "Customer";
 
     // Header
-    doc.setFillColor(79, 70, 229);
+    doc.setFillColor(14, 165, 233); // sky-500
     doc.rect(0, 0, pageWidth, 40, "F");
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
-    doc.setFont("helvetica", "bold");
-    doc.text("RentNow", 20, 22);
+
+    // Attempt to use DancingScript if loaded, otherwise fallback
+    try {
+      doc.setFont("DancingScript");
+    } catch {
+      doc.setFont("times", "italic");
+    }
+    doc.text("Leaseo", 20, 22);
 
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
@@ -263,7 +283,7 @@ export default function OrderDetailPage() {
       body: tableData,
       theme: "grid",
       headStyles: {
-        fillColor: [79, 70, 229],
+        fillColor: [14, 165, 233], // sky-500
         textColor: [255, 255, 255],
         fontSize: 9,
         fontStyle: "bold",
@@ -320,7 +340,7 @@ export default function OrderDetailPage() {
     });
 
     const totalY = yPos + 33;
-    doc.setDrawColor(79, 70, 229);
+    doc.setDrawColor(14, 165, 233); // sky-500
     doc.line(
       summaryStartX - 5,
       totalY - 5,
@@ -330,7 +350,7 @@ export default function OrderDetailPage() {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
     doc.text("Total:", summaryStartX, totalY + 3);
-    doc.setTextColor(79, 70, 229);
+    doc.setTextColor(14, 165, 233); // sky-500
     doc.text(
       `Rs. ${totalAmount.toLocaleString()}`,
       summaryStartX + summaryWidth,
@@ -357,7 +377,7 @@ export default function OrderDetailPage() {
     doc.text("3. This is a computer-generated document.", 20, footerY + 16);
 
     doc.text(
-      "RentNow | support@rentnow.com | +91-9876543210",
+      "Leaseo | support@leaseo.com | +91-9876543210",
       pageWidth / 2,
       footerY + 24,
       { align: "center" },
@@ -366,11 +386,11 @@ export default function OrderDetailPage() {
     return doc;
   };
 
-  const handleDownloadInvoice = () => {
+  const handleDownloadInvoice = async () => {
     if (!order) return;
 
     try {
-      const doc = generateInvoicePDF();
+      const doc = await generateInvoicePDF();
       if (doc) {
         doc.save(`Order_${order.orderNumber}.pdf`);
         toast.success("Invoice downloaded successfully!");
@@ -407,20 +427,21 @@ export default function OrderDetailPage() {
       <html>
         <head>
           <title>Order ${order.orderNumber}</title>
+          <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { font-family: 'Segoe UI', Arial, sans-serif; padding: 40px; color: #1f2937; }
             .container { max-width: 800px; margin: 0 auto; }
-            .header { display: flex; justify-content: space-between; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 3px solid #6366f1; }
-            .company h1 { font-size: 28px; color: #6366f1; }
+            .header { display: flex; justify-content: space-between; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 3px solid #0ea5e9; }
+            .company h1 { font-family: 'Dancing Script', cursive; font-size: 36px; color: #0ea5e9; }
             .company p { color: #6b7280; }
             .invoice-info { text-align: right; }
-            .invoice-info h2 { font-size: 24px; color: #6366f1; }
+            .invoice-info h2 { font-size: 24px; color: #0ea5e9; }
             .details { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px; }
             .details h3 { font-size: 12px; text-transform: uppercase; color: #9ca3af; margin-bottom: 8px; }
             .details p { margin: 4px 0; }
             table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-            th { background: #6366f1; color: white; padding: 12px; text-align: left; }
+            th { background: #0ea5e9; color: white; padding: 12px; text-align: left; }
             td { padding: 12px; border-bottom: 1px solid #e5e7eb; }
             .totals { width: 300px; margin-left: auto; }
             .totals-row { display: flex; justify-content: space-between; padding: 8px 0; }
@@ -433,7 +454,7 @@ export default function OrderDetailPage() {
           <div class="container">
             <div class="header">
               <div class="company">
-                <h1>RentNow</h1>
+                <h1>Leaseo</h1>
                 <p>Rental Services</p>
               </div>
               <div class="invoice-info">
@@ -515,7 +536,7 @@ export default function OrderDetailPage() {
 
             <div class="footer">
               <p>Thank you for your business!</p>
-              <p style="margin-top: 10px;">RentNow | support@rentnow.com | +91-9876543210</p>
+              <p style="margin-top: 10px;">Leaseo | support@leaseo.com | +91-9876543210</p>
             </div>
           </div>
         </body>
